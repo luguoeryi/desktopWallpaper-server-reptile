@@ -63,8 +63,7 @@ class ThemeOperation {
             
         });
     }
-    // 获取主题对应的图片资源页面
-    /** 
+    /** 获取主题对应的图片资源页面
      * data 当前主题对象
      * succeedCall 图片地址获取成功的回调
     */
@@ -114,23 +113,23 @@ class ThemeOperation {
     /** 
      * url 当前主题对象
     */
-   async getImgPageHighLinkStatic(url) {
-    return new Promise((resolve, reject) => {
-        const req = request.get({
-            url: this.themeHost + url,
-            encoding: null, // 此处要显式为null，不然内部会默认进行toString，toString参数没有的情况下，默认格式为utf8
-        }, (error, response, body) => {
-            if (error) {
-                console.log('获取获取高清图片url地址里的静态文件路径错误', body);
-                reject(error);
-            }
-            console.log('爬取的图片资源地址:', this.themeHost + url)
-            const doc = iconv.decode(body, 'gb2312').toString();
-            const $ = cheerio.load(doc);
-            let src = $('img').attr('src');
-            resolve(src);
+    async getImgPageHighLinkStatic(url) {
+        return new Promise((resolve, reject) => {
+            const req = request.get({
+                url: this.themeHost + url,
+                encoding: null, // 此处要显式为null，不然内部会默认进行toString，toString参数没有的情况下，默认格式为utf8
+            }, (error, response, body) => {
+                if (error) {
+                    console.log('获取获取高清图片url地址里的静态文件路径错误', body);
+                    reject(error);
+                }
+                console.log('爬取的图片资源地址:', this.themeHost + url)
+                const doc = iconv.decode(body, 'gb2312').toString();
+                const $ = cheerio.load(doc);
+                let src = $('img').attr('src');
+                resolve(src);
+            });
         });
-    });
-   }
+    }
 }
 module.exports = ThemeOperation;

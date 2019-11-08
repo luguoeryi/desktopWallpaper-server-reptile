@@ -6,7 +6,7 @@ const database = require('./db');
 
 class main {
     constructor() {
-        this.themeOperation = new ThemeOperation(); //主题操作对象
+        this.themeOperation = new ThemeOperation(); // 爬虫主题操作对象
         this.init();
     }
     async init() {
@@ -22,8 +22,8 @@ class main {
             for(let item of themeList) {
                 let wallpapeThemeId = await this.insetSqThemeList(item);
                 item.wallpapeThemeId = wallpapeThemeId;
-                await this.themeOperation.addThemeSubImg(item, (data) => {
-                    this.insetSqThemeImgList(data);
+                await this.themeOperation.addThemeSubImg(item, async (data) => {
+                    await this.insetSqThemeImgList(data);
                 });
             }
         } catch(e) {
@@ -45,19 +45,18 @@ class main {
                 resolve(resultsData.insertId);
               });
         })
-
     }
     // 将主题下图片数据写入数据库
     insetSqThemeImgList(data) {
         return new Promise((resolve, reject) => {
             database.query(`INSERT INTO wallpaper.wallpape_img (wallpape_theme_id, img_url, title) VALUES (${
                 data.wallpapeThemeId},'${data.imgUrl}', '${data.title}')`, function (error, results, fields) {
-                if (error) {
-                    return reject(error);
-                }
-                let resultsData = results;
-                console.log('图片信息插入db成功----', resultsData.insertId);
-                resolve(resultsData.insertId);
+                    if (error) {
+                        return reject(error);
+                    }
+                    let resultsData = results;
+                    console.log('图片信息插入db成功----', resultsData.insertId);
+                    resolve(resultsData.insertId);
                 });
         })
 
